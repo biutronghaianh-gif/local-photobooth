@@ -1,0 +1,57 @@
+# =========================
+# 1. Hệ điều hành & IDE (Code Editors)
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# 2. BẢO MẬT (Rất quan trọng)
+# =========================
+# Bỏ qua tất cả các file chứa biến môi trường (API keys, Mật khẩu DB...)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+backend/.env
+frontend/.env
+
+# =========================
+# 3. BACKEND (Python)
+# =========================
+# Môi trường ảo (Chứa các thư viện Python, dung lượng rất nặng)
+venv/
+.venv/
+env/
+.env_python/
+
+# Các file thực thi và bộ nhớ đệm (Tự động sinh ra khi chạy code Python)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database cục bộ & Logs
+*.sqlite3
+*.log
+
+# =========================
+# 4. FRONTEND (JavaScript)
+# =========================
+# Thư mục chứa thư viện JS (Cực kỳ nặng và nhiều file)
+node_modules/
+frontend/node_modules/
+
+# Thư mục build (Code đã được biên dịch để chạy thực tế, không cần đưa lên Git)
+build/
+dist/
+frontend/build/
+frontend/dist/
+.next/
+.nuxt/
+
+# Logs lỗi của trình quản lý gói (NPM/Yarn)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
