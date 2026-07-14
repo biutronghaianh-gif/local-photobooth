@@ -69,6 +69,24 @@ function CameraView() {
 
 export default function App() {
   const [selectedLayout, setSelectedLayout] = useState(LAYOUTS[0].id);
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
+  const [backendMessage, setBackendMessage] = useState<string>('');
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to connect');
+        return res.json();
+      })
+      .then((data) => {
+        setBackendStatus('connected');
+        setBackendMessage(data.message || 'Connected');
+      })
+      .catch((err) => {
+        console.error(err);
+        setBackendStatus('disconnected');
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100 flex flex-col font-sans">
@@ -87,6 +105,20 @@ export default function App() {
           <Sparkles className="w-6 h-6" />
         </motion.div>
         <p className="text-pink-400/80 font-medium mt-1">Capture your lovely moments</p>
+
+        {/* Backend Connection Status */}
+        <div className="mt-3 flex items-center gap-2 px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full border border-pink-100 shadow-sm">
+          <span className={`w-2 h-2 rounded-full ${
+            backendStatus === 'connected' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
+            backendStatus === 'disconnected' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]' :
+            'bg-amber-500 animate-pulse'
+          }`} />
+          <span className="text-xs font-semibold text-pink-800">
+            {backendStatus === 'connected' ? `Backend Connected: ${backendMessage}` :
+             backendStatus === 'disconnected' ? 'Backend Disconnected' :
+             'Checking Backend...'}
+          </span>
+        </div>
       </header>
 
       {/* Main Content Area */}
