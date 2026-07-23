@@ -142,3 +142,32 @@ The frontend includes a highly customizable, atomic component library:
 | `accordion.tsx` | Collapsible section blocks. |
 | `sidebar.tsx` | Highly configurable app sidebar dashboard component. |
 | `image-with-fallback.tsx` | Custom fallback wrapper rendering a placeholder SVG on image load failures. |
+
+---
+
+## 🌐 Deploying to Vercel
+
+This repository is pre-configured for seamless deployment to **Vercel** with a unified static frontend and Python serverless function backend.
+
+### Deploying via Vercel CLI
+
+1. **Install Vercel CLI** (if not already installed):
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy directly from the root directory**:
+   ```bash
+   vercel
+   ```
+
+3. **Deploy to production**:
+   ```bash
+   vercel --prod
+   ```
+
+### Deploying via GitHub Integration
+
+1. Import the repository into your Vercel dashboard.
+2. Vercel automatically detects `vercel.json` and builds both the React Vite frontend (`frontend/dist`) and the Python FastAPI backend (`api/index.py`).
+3. Click **Deploy**!

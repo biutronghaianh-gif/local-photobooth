@@ -10,9 +10,28 @@ class PhotoUpload(BaseModel):
     image: str  # base64 data URL
 
 def get_storage_path():
+    # If running on Vercel or read-only filesystem, use /tmp/storage
+    is_vercel = os.getenv("VERCEL") is not None
     current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     backend_dir = os.path.dirname(current_dir)
-    return os.path.join(backend_dir, "storage")
+    default_storage = os.path.join(backend_dir, "storage")
+    
+    if is_vercel:
+        storage_path = "/tmp/storage"
+    else:
+        try:
+            os.makedirs(default_storage, exist_ok=True)
+            # Test write access
+            test_file = os.path.join(default_storage, ".write_test")
+            with open(test_file, "w") as f:
+                f.write("test")
+            os.remove(test_file)
+            storage_path = default_storage
+        except (OSError, IOError):
+            storage_path = "/tmp/storage"
+
+    os.makedirs(storage_path, exist_ok=True)
+    return storage_path
 
 @router.get("/")
 def get_photos():
@@ -31,7 +50,7 @@ def get_photos():
                 stat = os.stat(filepath)
                 photos.append({
                     "filename": filename,
-                    "url": f"http://localhost:8000/storage/{filename}",
+                    "url": f"/storage/{filename}",
                     "created_at": stat.st_mtime
                 })
             except OSError:
@@ -67,7 +86,7 @@ def upload_photo(photo: PhotoUpload):
         return {
             "message": "Photo uploaded successfully",
             "filename": filename,
-            "url": f"http://localhost:8000/storage/{filename}"
+            "url": f"/storage/{filename}"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to process image: {str(e)}")
@@ -91,4 +110,5 @@ def delete_photo(filename: str):
             raise HTTPException(status_code=500, detail=f"Failed to delete file: {str(e)}")
     else:
         raise HTTPException(status_code=404, detail="Photo not found")
+
 

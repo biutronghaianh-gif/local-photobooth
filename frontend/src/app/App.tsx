@@ -224,8 +224,10 @@ export default function App() {
   }, [stream, appState]);
 
   // --- Backend Sync Functions ---
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
   const fetchGallery = () => {
-    fetch('http://127.0.0.1:8000/api/v1/photos/')
+    fetch(`${API_BASE}/api/v1/photos/`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load gallery');
         return res.json();
@@ -242,7 +244,7 @@ export default function App() {
 
   useEffect(() => {
     // Check backend connection
-    fetch('http://127.0.0.1:8000/')
+    fetch(`${API_BASE}/api`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to connect');
         return res.json();
@@ -426,7 +428,7 @@ export default function App() {
     if (!capturedResult) return;
     setSaving(true);
 
-    fetch('http://127.0.0.1:8000/api/v1/photos/upload', {
+    fetch(`${API_BASE}/api/v1/photos/upload`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -452,7 +454,7 @@ export default function App() {
   const deletePhoto = (filename: string) => {
     if (!confirm('Are you sure you want to delete this photo from the gallery?')) return;
     
-    fetch(`http://127.0.0.1:8000/api/v1/photos/${filename}`, {
+    fetch(`${API_BASE}/api/v1/photos/${filename}`, {
       method: 'DELETE'
     })
       .then((res) => {
